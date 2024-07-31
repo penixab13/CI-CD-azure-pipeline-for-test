@@ -1,19 +1,33 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  - main  # or any branch you want to trigger the pipeline
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'  # Ensure you have the right Python version
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: |
+      python -m pip install --upgrade pip
+      pip install pandas openpyxl
+    displayName: 'Install Dependencies'
+
+  - script: |
+      python generate_dummy_report.py
+    displayName: 'Generate Dummy Report'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'dummy_report.xlsx'
+      artifactName: 'DummyReport'
+    displayName: 'Publish Excel Report'
+
+  - script: |
+      BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
+      CHAT_ID="5370229480"  # Replace with your chat ID
+      REPORT_URL="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
+      MESSAGE="Dummy KPI Report has been generated and is available at: $REPORT_URL"
+      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" -d chat_id=$CHAT_ID -d text="$MESSAGE"
+    displayName: 'Send Report to Telegram'
