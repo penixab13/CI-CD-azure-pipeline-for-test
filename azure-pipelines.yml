@@ -19,36 +19,34 @@ steps:
       pip install pandas openpyxl
     displayName: 'Install Dependencies'
 
-  - script: |
-      python3 generate_dummy_report.py
-    displayName: 'Generate Dummy Report'
+- script: |
+    # Create a directory for the report
+    mkdir -p $(Pipeline.Workspace)/report
+  displayName: 'Create Directory for Report'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: '$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx'
-      artifactName: 'DummyReport'
-    displayName: 'Publish Excel Report'
+- script: |
+    # Generate the report and save it in the created directory
+    python3 generate_dummy_report.py --output $(Pipeline.Workspace)/report/dummy_report.xlsx
+  displayName: 'Generate Dummy Report'
 
-  - script: |
-      # Print the current working directory and list files for debugging
-      echo "Current working directory:"
-      pwd
-      echo "Listing contents of the directory:"
-      ls -la "$(Build.ArtifactStagingDirectory)/DummyReport/"
-    displayName: 'Check Report File Path'
+- script: |
+    # List files to ensure the report is generated
+    echo "Listing contents of the report directory:"
+    ls -la $(Pipeline.Workspace)/report/
+  displayName: 'Check Report File Path'
 
-  - script: |
-      # Ensure the report file exists
-      REPORT_FILE="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
-      if [ -f "$REPORT_FILE" ]; then
-        # Send the file to Telegram
-        BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
-        CHAT_ID="5370229480"  # Replace with your chat ID
-        curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
-            -F chat_id=$CHAT_ID \
-            -F document=@"$REPORT_FILE" \
-            -F caption="Dummy KPI Report has been generated and is attached."
-      else
-        echo "File not found: $REPORT_FILE"
-      fi
-    displayName: 'Send Report to Telegram'
+- script: |
+    # Ensure the report file exists
+    REPORT_FILE="$(Pipeline.Workspace)/report/dummy_report.xlsx"
+    if [ -f "$REPORT_FILE" ]; then
+      # Send the file to Telegram
+      BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
+      CHAT_ID="5370229480"  # Replace with your chat ID
+      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
+           -F chat_id=$CHAT_ID \
+           -F document=@"$REPORT_FILE" \
+           -F caption="Dummy KPI Report has been generated and is attached."
+    else
+      echo "File not found: $REPORT_FILE"
+    fi
+  displayName: 'Send Report to Telegram'
