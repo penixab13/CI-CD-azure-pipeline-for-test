@@ -21,23 +21,23 @@ steps:
 
   - script: |
       # Create a directory for the report
-      mkdir -p $(Pipeline.Workspace)/report
+      mkdir -p report
     displayName: 'Create Directory for Report'
 
   - script: |
       # Generate the report and save it in the created directory
-      python3 generate_dummy_report.py --output $(Pipeline.Workspace)/report/dummy_report.xlsx
+      python3 generate_dummy_report.py --output report/dummy_report.xlsx
     displayName: 'Generate Dummy Report'
 
   - script: |
       # List files to ensure the report is generated
       echo "Listing contents of the report directory:"
-      ls -la $(Pipeline.Workspace)/report/
+      ls -la report/
     displayName: 'Check Report File Path'
 
   - script: |
       # Ensure the report file exists
-      REPORT_FILE="$(Pipeline.Workspace)/report/dummy_report.xlsx"
+      REPORT_FILE="report/dummy_report.xlsx"
       if [ -f "$REPORT_FILE" ]; then
         # Send the file to Telegram
         BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
