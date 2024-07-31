@@ -2,23 +2,14 @@ trigger:
   - main  # or any branch you want to trigger the pipeline
 
 pool:
-<<<<<<< HEAD
   name : 'Azure Pipelines'
-=======
-  vmImage: 'ubuntu-latest'
->>>>>>> 422d1b2584aae21d67e709ece6e10450ef472419
 
 steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.12'  # Ensure you have the right Python version
-<<<<<<< HEAD
-      architecture: 'x64'
-=======
       architecture: 'x86'
->>>>>>> 422d1b2584aae21d67e709ece6e10450ef472419
       addToPath: true
-    displayName: 'Use Python 3.12'
 
   - script: |
       python -m pip install --upgrade pip
