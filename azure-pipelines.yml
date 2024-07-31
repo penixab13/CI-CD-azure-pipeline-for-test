@@ -2,7 +2,7 @@ trigger:
   - main  # or any branch you want to trigger the pipeline
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name : 'HASNAE-ABOUCHOU'
 
 steps:
   - task: UsePythonVersion@0
