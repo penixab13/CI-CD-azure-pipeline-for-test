@@ -2,7 +2,7 @@ trigger:
   - main  # or any branch you want to trigger the pipeline
 
 pool:
-  name : 'HASNAE-ABOUCHOU'
+  name : 'Default'
 
 steps:
   - task: UsePythonVersion@0
