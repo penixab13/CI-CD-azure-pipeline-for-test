@@ -23,30 +23,32 @@ steps:
       python3 generate_dummy_report.py
     displayName: 'Generate Dummy Report'
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: 'dummy_report.xlsx'
-      artifactName: 'DummyReport'
-    displayName: 'Publish Excel Report'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: 'dummy_report.xlsx'
+    artifactName: 'DummyReport'
+  displayName: 'Publish Excel Report'
 
-  - script: |
-      ls -la "$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
-    displayName: 'Check Report File Path'
+- script: |
+    # Print the current working directory and list files for debugging
+    echo "Current working directory:"
+    pwd
+    echo "Listing contents of the directory:"
+    ls -la "$(Build.ArtifactStagingDirectory)/DummyReport/"
+  displayName: 'Check Report File Path'
 
-  - script: |
-      chmod +r "$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
-    displayName: 'Ensure File Permissions'
-
-  - script: |
+- script: |
+    # Ensure the report file exists
+    REPORT_FILE="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
+    if [ -f "$REPORT_FILE" ]; then
+      # Send the file to Telegram
       BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
       CHAT_ID="5370229480"  # Replace with your chat ID
-      REPORT_FILE="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
-      if [ -f "$REPORT_FILE" ]; then
-        curl -v -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
-             -F chat_id=$CHAT_ID \
-             -F document=@"$REPORT_FILE" \
-             -F caption="Dummy KPI Report has been generated and is attached."
-      else
-        echo "File not found: $REPORT_FILE"
-      fi
-    displayName: 'Send Report to Telegram'
+      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
+           -F chat_id=$CHAT_ID \
+           -F document=@"$REPORT_FILE" \
+           -F caption="Dummy KPI Report has been generated and is attached."
+    else
+      echo "File not found: $REPORT_FILE"
+    fi
+  displayName: 'Send Report to Telegram'
