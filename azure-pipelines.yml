@@ -37,7 +37,7 @@ steps:
 
   - script: |
       # Ensure the report file exists
-      REPORT_FILE="report/dummy_report.xlsx"
+      REPORT_FILE="$(Pipeline.Workspace)/report/dummy_report.xlsx"
       if [ -f "$REPORT_FILE" ]; then
         # Send the file to Telegram
         BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
