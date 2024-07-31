@@ -25,7 +25,7 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: 'dummy_report.xlsx'
+      pathToPublish: '$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx'
       artifactName: 'DummyReport'
     displayName: 'Publish Excel Report'
 
