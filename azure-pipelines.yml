@@ -2,13 +2,13 @@ trigger:
   - main  # or any branch you want to trigger the pipeline
 
 pool:
-  name : 'Default'
+  name : 'Azure Pipelines'
 
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.12.4'  # Ensure you have the right Python version
-      architecture: 'x86'
+      versionSpec: '3.12'  # Ensure you have the right Python version
+      architecture: 'x64'
       addToPath: true
 
   - script: |
