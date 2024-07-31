@@ -7,7 +7,7 @@ pool:
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.9'  # Ensure you have the right Python version
+      versionSpec: '3.12'  # Ensure you have the right Python version
 
   - script: |
       python -m pip install --upgrade pip
