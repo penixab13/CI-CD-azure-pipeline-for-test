@@ -32,7 +32,9 @@ steps:
   - script: |
       BOT_TOKEN="7427451676:AAHRuoRuj8Wgr_zUUqFIsVmHvuXPmUbzNPM"
       CHAT_ID="5370229480"  # Replace with your chat ID
-      REPORT_URL="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
-      MESSAGE="Dummy KPI Report has been generated and is available at: $REPORT_URL"
-      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" -d chat_id=$CHAT_ID -d text="$MESSAGE"
+      REPORT_FILE="$(Build.ArtifactStagingDirectory)/DummyReport/dummy_report.xlsx"
+      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendDocument" \
+           -F chat_id=$CHAT_ID \
+           -F document=@"$REPORT_FILE" \
+           -F caption="Dummy KPI Report has been generated and is attached."
     displayName: 'Send Report to Telegram'
