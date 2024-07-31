@@ -7,8 +7,8 @@ pool:
 steps:
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.12'  # Ensure you have the right Python version
-      architecture: 'x86'
+      versionSpec: '3.13.0-beta.4'  # Ensure you have the right Python version
+      architecture: 'x64'
       addToPath: true
 
   - script: |
